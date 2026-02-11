@@ -43,13 +43,11 @@ services:
   jenkins:
     build: .
     ports:
-      - "8090:8090"
+      - "8080:8080"
       - "50000:50000"
     volumes:
       - jenkins_home:/var/jenkins_home
       - jenkins_logs:/var/log/jenkins
-    environment:
-      - JENKINS_JAVA_OPTS=-Dcom.sun.akuma.Daemon=true -Djava.awt.headless=true
     networks:
       - elk
 
