@@ -23,7 +23,7 @@ processors:
   - add_kubernetes_metadata: ~
 
 output.elasticsearch:
-  hosts: ["elasticsearch:9200"]
+  hosts: ["logstash:5044"]
   index: "jenkins-logs-%{+yyyy.MM.dd}"
 
 logging.level: info
