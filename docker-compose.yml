@@ -14,15 +14,13 @@ services:
     networks:
       - elk
 
-  logstash:
-    image: docker.elastic.co/logstash/logstash:8.11.0
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:8.11.0
+    user: root
     volumes:
-      - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf
-      - jenkins_logs:/var/log/jenkins
-    ports:
-      - "5000:5000"
-    environment:
-      - xpack.monitoring.enabled=false
+      - ./filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      - jenkins_logs:/var/log/jenkins:ro
+    command: filebeat -e -strict.perms=false
     depends_on:
       - elasticsearch
     networks:
