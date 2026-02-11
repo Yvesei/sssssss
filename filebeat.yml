@@ -24,7 +24,6 @@ processors:
 
 output.elasticsearch:
   hosts: ["logstash:5044"]
-  index: "jenkins-logs-%{+yyyy.MM.dd}"
 
 logging.level: info
 logging.to_files: true
