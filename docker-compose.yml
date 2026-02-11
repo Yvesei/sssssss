@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - xpack.security.enrollment.enabled=false
+    ports:
+      - "9200:9200"
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+    networks:
+      - elk
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.11.0
+    volumes:
+      - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+      - jenkins_logs:/var/log/jenkins
+    ports:
+      - "5000:5000"
+    environment:
+      - xpack.monitoring.enabled=false
+    depends_on:
+      - elasticsearch
+    networks:
+      - elk
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.11.0
+    ports:
+      - "5601:5601"
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - xpack.security.enabled=false
+    depends_on:
+      - elasticsearch
+    networks:
+      - elk
+
+  jenkins:
+    image: jenkins/jenkins:latest
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - jenkins_logs:/var/log/jenkins
+      - ./init.groovy:/var/jenkins_home/init.groovy.d/configure-logging.groovy
+    environment:
+      - JENKINS_JAVA_OPTS=-Dcom.sun.akuma.Daemon=true -Djava.awt.headless=true -Dio.jenkins.plugins.opentelemetry.logexporter.jaeger.enabled=false
+      - JAVA_OPTS=-Dcom.sun.akuma.Daemon=true -Djava.awt.headless=true
+    user: "0"
+    command: sh -c "mkdir -p /var/log/jenkins && chmod 777 /var/log/jenkins && /usr/local/bin/jenkins.sh"
+    networks:
+      - elk
+
+volumes:
+  es_data:
+  jenkins_home:
+  jenkins_logs:
+
+networks:
+  elk:
+    driver: bridge
