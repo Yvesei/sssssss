@@ -37,6 +37,19 @@ services:
       - elasticsearch
     networks:
       - elk
+    
+    logstash:
+      image: docker.elastic.co/logstash/logstash:8.11.0
+      container_name: logstash
+      user: root
+      volumes:
+        - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf:ro
+      ports:
+        - "5044:5044"
+      networks:
+        - elk
+      depends_on:
+        - elasticsearch
 
   jenkins:
     build: .
