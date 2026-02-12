@@ -1,30 +1,31 @@
 #!/bin/bash
+
 echo "Running Normal Usage..."
-./gatling.sh -sf gatling-simulations -s NormalUsageSimulation
+gatling -sf gatling-simulations -s NormalUsageSimulation
 
 sleep 60
 
 echo "Running Brute Force..."
-./gatling.sh -sf gatling-simulations -s BruteForceAttackSimulation
+gatling -sf gatling-simulations -s BruteForceAttackSimulation
 
 sleep 30
 
 echo "Running Injection..."
-./gatling.sh -sf gatling-simulations -s InjectionAttackSimulation
+gatling -sf gatling-simulations -s InjectionAttackSimulation
 
 sleep 30
 
 echo "Running API Abuse..."
-./gatling.sh -sf gatling-simulations -s APIAbuseSimulation
+gatling -sf gatling-simulations -s APIAbuseSimulation
 
 sleep 30
 
 echo "Running Unauthorized..."
-./gatling.sh -sf gatling-simulations -s UnauthorizedAccessSimulation
+gatling -sf gatling-simulations -s UnauthorizedAccessSimulation
 
 sleep 30
 
 echo "Running DoS..."
-./gatling.sh -sf gatling-simulations -s DenialOfServiceSimulation
+gatling -sf gatling-simulations -s DenialOfServiceSimulation
 
 echo "All tests complete. Check Kibana for results."
